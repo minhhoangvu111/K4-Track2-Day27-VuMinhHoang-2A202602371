@@ -109,6 +109,19 @@ def check_lineage_run(payload, ctx):
     if duration > duration_max:
         issues.append("duration")
 
+    upstream = result.get("actual_upstream")
+    downstream_count = result.get("actual_downstream_count")
+    if (not isinstance(upstream, list)
+            or any(not isinstance(item, str) for item in upstream)
+            or not _number(downstream_count)):
+        return _invalid(pillar)
+    if not upstream:
+        issues.append("missing_upstream")
+    elif len(upstream) == 1:
+        issues.append("sparse_upstream")
+    if downstream_count == 0:
+        issues.append("orphan_output")
+
     # Compare graph shape only when this event explicitly supplies its expected
     # shape; the defense does not assume a topology or memorize run IDs.
     if "expected_upstream" in payload:

@@ -1,7 +1,5 @@
-# Reflection (≤1 page)
+# Reflection
 
-Fill this in before you submit.
+The hardest faults to catch were lineage faults, especially missing upstream edges. A runtime threshold catches obvious slow runs, but it cannot establish whether a graph is complete. Empty or very sparse upstream lists and zero downstream count gave useful structural signals in practice. The practice stream reached TPR 1.0 with no false alarms, while public reached TPR 0.9231 and FPR 0.0165; public's coarse pillar bands were high across all four pillars. The unseen private stream may contain subtler deviations, so these results are evidence for tuning, not a guarantee.
 
-**Which fault types were hardest to catch, and why?**
-
-**What would you change about your cost/coverage tradeoff, if you had another pass?**
+With another pass, I would validate lineage topology against explicit, general expectations when the event provides them, and test whether a run-wide baseline can identify sparse graphs without flagging valid roots or leaves. The current defense makes one specialized RPC call per event. That cost was 180/220 in practice and 240/220 in public; the public budget overage reduced its score. Since private has a larger 320-credit budget and broader coverage matters, I would keep the current coverage as the starting point and only skip calls when a reliable signal shows the check is unnecessary. I would use practice and public feedback to check general behavior, not fit rules to event IDs or one stream.
